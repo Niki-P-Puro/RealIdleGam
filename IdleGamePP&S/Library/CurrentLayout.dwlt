@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 9}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 521}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_MinSize: {x: 302, y: 200}
   m_MaxSize: {x: 8002, y: 4021}
   vertical: 0
-  controlID: 152
+  controlID: 148
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 917, y: 471}
   m_MaxSize: {x: 22012, y: 14042}
   vertical: 0
-  controlID: 33
+  controlID: 169
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -218,7 +218,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 997
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 521}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &10
 MonoBehaviour:
@@ -284,7 +284,7 @@ MonoBehaviour:
   m_MinSize: {x: 640, y: 471}
   m_MaxSize: {x: 18010, y: 14042}
   vertical: 1
-  controlID: 34
+  controlID: 71
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_MinSize: {x: 640, y: 271}
   m_MaxSize: {x: 18010, y: 10021}
   vertical: 0
-  controlID: 35
+  controlID: 72
 --- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -405,19 +405,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/SCRIPTS
+    - Assets/PREFABS
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/SCRIPTS
+  - Assets/PREFABS
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Niki Steeg\PP&Sidle\RealIdleGame\IdleGamePP&S
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 18260000
-    m_LastClickedID: 9752
-    m_ExpandedIDs: 000000001226000000ca9a3bffffff7f
+    m_SelectedIDs: 20260000
+    m_LastClickedID: 9760
+    m_ExpandedIDs: 000000001426000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -445,7 +445,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000012260000
+    m_ExpandedIDs: 0000000014260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -564,19 +564,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/SCRIPTS
+    - Assets/PREFABS
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/SCRIPTS
+  - Assets/PREFABS
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Niki Steeg\PP&Sidle\RealIdleGame\IdleGamePP&S
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 18260000
-    m_LastClickedID: 9752
-    m_ExpandedIDs: 000000001226000000ca9a3bffffff7f
+    m_SelectedIDs: 20260000
+    m_LastClickedID: 9760
+    m_ExpandedIDs: 000000001426000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -604,7 +604,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000012260000
+    m_ExpandedIDs: 0000000014260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -629,8 +629,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 3491ffff
-    m_LastClickedInstanceID: -28364
+    m_SelectedInstanceIDs: a0260000
+    m_LastClickedInstanceID: 9888
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000c426000000000000
     m_RenameOverlay:
@@ -720,20 +720,20 @@ MonoBehaviour:
     height: 553
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 3491ffff
-    m_LastClickedID: -28364
-    m_ExpandedIDs: 3491ffff64ebffff56f7ffff1afcffff000000003626000076260000
+    m_SelectedIDs: a0260000
+    m_LastClickedID: 9888
+    m_ExpandedIDs: 1afcffff000000005426000080260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Upgrade
-      m_OriginalName: Upgrade
+      m_Name: Buy (3)
+      m_OriginalName: Buy (3)
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: -38782
+      m_UserData: -108808
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
@@ -772,14 +772,14 @@ MonoBehaviour:
     width: 556
     height: 553
   m_SceneLighting: 1
-  lastFramingTime: 122.8408108
+  lastFramingTime: 1662.4916818
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 707.7484, y: 360.02386, z: -2.5131836}
+    m_Target: {x: 539, y: 450, z: 0}
     speed: 2
-    m_Value: {x: 707.7484, y: 360.02386, z: -2.5131836}
+    m_Value: {x: 539, y: 450, z: 0}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -806,9 +806,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0.0011905478, y: -0.0074956915, z: -0.000008916553, w: -0.99997115}
   m_Size:
-    m_Target: 871.78674
+    m_Target: 1178.3875
     speed: 2
-    m_Value: 871.78674
+    m_Value: 1178.3875
   m_Ortho:
     m_Target: 0
     speed: 2
