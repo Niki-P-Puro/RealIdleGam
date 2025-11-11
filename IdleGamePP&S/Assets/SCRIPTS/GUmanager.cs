@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class GUmanager : MonoBehaviour
@@ -16,7 +14,7 @@ public class GUmanager : MonoBehaviour
     public float speed { get; set; }
     public float purchasemultiplier { get; set; } 
     public float amountowned { get; set; }
-    public GUmanager(string name, string description, float change, float cost, float multiplier, float speed, float purchasemultiplier, float amountowned)
+    public GUmanager(string name,string description, float change, float cost, float multiplier, float speed, float purchasemultiplier, float amountowned)
     {
         this.name = name;
         this.description = description;
@@ -26,13 +24,20 @@ public class GUmanager : MonoBehaviour
         this.speed = speed;
         this.purchasemultiplier = purchasemultiplier;
         this.amountowned = amountowned;
+
     }
     public void Update()
     {
         Transform child1 = transform.Find("Cost");
         child1.GetComponent<Text>().text = "Cost: " + cost.ToString("F1");
         Transform child2 = transform.Find("Upgrade");
-        child2.GetComponent<Text>().text = description;
+        if (this.description != null)
+        {
+            child2.GetComponent<Text>().text = this.description;
+            return;
+        }
+        else child2.GetComponent<Text>().text = (10 * change).ToString() + "/s";
+
     }
 
 }    
