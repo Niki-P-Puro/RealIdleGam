@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
+using UnityEngine;  
 using UnityEngine.UI;
 
 public class Gamemanager : MonoBehaviour
 {
+    public List<int> value = new List<int>();
     public Text NumberText, NumberAs;
     public float Number = 10;
     public GameObject[] Upgrades = new GameObject[8];
@@ -41,14 +42,16 @@ public class Gamemanager : MonoBehaviour
         //    {
         //     Achievements[i] = GameObject.Find("AchievementHolder").transform.GetChild(i).gameObject;
         //    }
-        
+        //achivements will provide flat multipliers 
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Number < Mathf.Pow(10,4))
         NumberText.text = Number.ToString("F1");
-        
+        else
+        NumberText.text = Number.ToString("E1");
         float totalGeneration = 0;
         for (int i = 0; i < Generators.Length; i++)
         {
@@ -56,12 +59,8 @@ public class Gamemanager : MonoBehaviour
             Generators[i].GetComponent<GUmanager>().description = Generators[i].GetComponent<GUmanager>().change.ToString("F1") + "/s";
         }
         generation = totalGeneration;
+        
         NumberAs.text = (totalGeneration*10).ToString("F1") + "/s";
-    }
-
-    public void AddNumber(float add)
-    {
-        NumberText.text = Number.ToString();
     }
 
     public void SubNumber(float sub)

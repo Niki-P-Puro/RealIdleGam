@@ -28,16 +28,27 @@ public class GUmanager : MonoBehaviour
     }
     public void Update()
     {
+        
         Transform child1 = transform.Find("Cost");
-        child1.GetComponent<Text>().text = "Cost: " + cost.ToString("F1");
+        if (cost < Mathf.Pow(10, 6))
+            child1.GetComponent<Text>().text = "Cost: " + cost.ToString("F1");
+        else
+            child1.GetComponent<Text>().text = "Cost: " + cost.ToString("E1");
+                                                                                
         Transform child2 = transform.Find("Upgrade");
         if (this.description != null)
         {
             child2.GetComponent<Text>().text = this.description;
             return;
         }
-        else child2.GetComponent<Text>().text = (10 * change).ToString() + "/s";
+        else
+        {
+            if (change < Mathf.Pow(10, 6))
+                child2.GetComponent<Text>().text = (10 * change).ToString("F1") + "/s";
+            else
+                child2.GetComponent<Text>().text = (10 * change).ToString("E1") + "/s";
 
+        }
     }
 
 }    
