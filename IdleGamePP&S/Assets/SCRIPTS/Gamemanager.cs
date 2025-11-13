@@ -16,28 +16,37 @@ public class Gamemanager : MonoBehaviour
     public GameObject[] menus = new GameObject[8];
     private bool isGenerating = false; // Track if generation is active
     public float growthrate = 1.15f;
+    public float totalGeneration = 0;
     // Use this for initialization
     void Start()
     {
-        for (int i = 0; i < Generators.Length; i++)
+        if (PlayerPrefs.HasKey("offlineProgress"))
         {
-            Generators[i].GetComponent<GUmanager>().cost = Mathf.Pow(8, (i * ((i != 0 && i != 1) ? 1.3f : 1f)) + 1); // Cost increases exponentially
-            Generators[i].GetComponent<GUmanager>().purchasemultiplier = 1.6f + ((i+1) * (growthrate)); // Incremental multiplier
-            Generators[i].GetComponent<GUmanager>().change = 0.02f * Mathf.Pow(6, (i * 1.3f) + 1);//this is kinda messed up   // Change increases with index
-            Generators[i].GetComponent<GUmanager>().multiplier = 1f;
-            Generators[i].GetComponent<GUmanager>().speed = 1f;
-            Generators[i].GetComponent<GUmanager>().amountowned = 0;
+            float storedValue = PlayerPrefs.GetFloat("offlineProgress");
+            Number += storedValue;
+            Debug.Log("Restored offline progress: " + storedValue);
         }
-        for (int i = 0; i < Upgrades.Length; i++)
-        {
-            Upgrades[i].GetComponent<GUmanager>().cost = Mathf.Pow(12, (i * 1.1f) + 1); // Cost increases exponentially
-            Upgrades[i].GetComponent<GUmanager>().purchasemultiplier = 6f + ((i+1) * (growthrate)); // Incremental multiplier
-            Upgrades[i].GetComponent<GUmanager>().change = 0;
-            Upgrades[i].GetComponent<GUmanager>().multiplier = 1.4f;
-            Upgrades[i].GetComponent<GUmanager>().speed = 1f;
-            Upgrades[i].GetComponent<GUmanager>().amountowned = 0;
-            Upgrades[i].GetComponent<GUmanager>().description = "2x production";
-        }        
+       
+            for (int i = 0; i < Generators.Length; i++)
+            {
+                Generators[i].GetComponent<GUmanager>().cost = Mathf.Pow(8, (i * ((i != 0 && i != 1) ? 1.3f : 1f)) + 1); // Cost increases exponentially
+                Generators[i].GetComponent<GUmanager>().purchasemultiplier = 1.6f + ((i+1) * (growthrate)); // Incremental multiplier
+                Generators[i].GetComponent<GUmanager>().change = 0.02f * Mathf.Pow(6, (i * 1.3f) + 1);//this is kinda messed up   // Change increases with index
+                Generators[i].GetComponent<GUmanager>().multiplier = 1f;
+                Generators[i].GetComponent<GUmanager>().speed = 1f;
+                Generators[i].GetComponent<GUmanager>().amountowned = 0;
+            }
+            for (int i = 0; i < Upgrades.Length; i++)
+            {
+                Upgrades[i].GetComponent<GUmanager>().cost = Mathf.Pow(12, (i * 1.1f) + 1); // Cost increases exponentially
+                Upgrades[i].GetComponent<GUmanager>().purchasemultiplier = 6f + ((i+1) * (growthrate)); // Incremental multiplier
+                Upgrades[i].GetComponent<GUmanager>().change = 0;
+                Upgrades[i].GetComponent<GUmanager>().multiplier = 1.4f;
+                Upgrades[i].GetComponent<GUmanager>().speed = 1f;
+                Upgrades[i].GetComponent<GUmanager>().amountowned = 0;
+                Upgrades[i].GetComponent<GUmanager>().description = "2x production";
+            }
+        
         //for (int i = 0; i < Achievements.Length; i++)
         //    {
         //     Achievements[i] = GameObject.Find("AchievementHolder").transform.GetChild(i).gameObject;
@@ -48,11 +57,15 @@ public class Gamemanager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.P) )
+        {
+            PlayerPrefs.DeleteAll();
+        }
         if (Number < Mathf.Pow(10,4))
         NumberText.text = Number.ToString("F1");
         else
         NumberText.text = Number.ToString("E1");
-        float totalGeneration = 0;
+        
         for (int i = 0; i < Generators.Length; i++)
         {
             totalGeneration += (Generators[i].GetComponent<GUmanager>().change * Generators[i].GetComponent<GUmanager>().amountowned);
@@ -95,7 +108,7 @@ public class Gamemanager : MonoBehaviour
             }
         }
     }
-    private void StartGenerating()
+    public void StartGenerating()
     {
         isGenerating = true; // Set generating to true
         StartCoroutine(ConstantTime());
@@ -129,5 +142,123 @@ public class Gamemanager : MonoBehaviour
         menus[0].SetActive(false);
         menus[1].SetActive(false);
     }
+
+
+
+    [System.Serializable]
+    public class GUsavedata
+    {
+
+       public float cost;
+       public float amountowned;
+       public float change;
+       public float multiplier;
+       public float speed;
+       public float purchasemultiplier;
+       public string description;
+       
+    }
+    [System.Serializable]
+    public class SaveDataArray
+    {
+        public GUsavedata[] items;
+    }
+
+    public string SaveGenUmanager()
+    {
+        SaveDataArray saveData = new SaveDataArray();
+        saveData.items = new GUsavedata[Generators.Length];
+        for (int i = 0; i < Generators.Length; i++)
+        {
+            if (Generators[i] == null)
+                continue;
+            GUmanager g = Generators[i].GetComponent<GUmanager>();
+            saveData.items[i] = new GUsavedata
+            {
+                cost = g.cost,
+                amountowned = g.amountowned,
+                change = g.change,
+                multiplier = g.multiplier,
+                speed = g.speed,
+                purchasemultiplier = g.purchasemultiplier,
+                description = g.description
+            };
+        }
+        string json = JsonUtility.ToJson(saveData);
+        print(json);
+        return json;
+    }
+    public void LoadGenUmanager()
+    {
+        if (!PlayerPrefs.HasKey("upgrade")) return;
+        string json = PlayerPrefs.GetString("upgrades");
+        SaveDataArray saveData = JsonUtility.FromJson<SaveDataArray>(json);
+        for (int i = 0; i < Generators.Length; i++)
+        {
+            if (Generators[i] == null)
+                continue;
+            GUmanager g = Generators[i].GetComponent<GUmanager>();
+            GUsavedata savedata = saveData.items[i];
+            g.cost = savedata.cost;
+            g.amountowned = savedata.amountowned;
+            g.change = savedata.change;
+            g.multiplier = savedata.multiplier;
+            g.speed = savedata.speed;
+            g.purchasemultiplier = savedata.purchasemultiplier;
+            g.description = savedata.description;
+            print("loaded generator data for generator " + i + ": " + json);
+           
+        }
+       
+            
+           
+        
+    }
+    public string SaveGUPGmanager()
+    {
+        SaveDataArray saveData = new SaveDataArray();
+        saveData.items = new GUsavedata[Upgrades.Length];
+        for (int i = 0; i < Upgrades.Length; i++)
+        {
+            if (Upgrades[i] == null)
+                continue;
+            GUmanager g = Upgrades[i].GetComponent<GUmanager>();
+            saveData.items[i] = new GUsavedata
+            {
+                cost = g.cost,
+                amountowned = g.amountowned,
+                change = g.change,
+                multiplier = g.multiplier,
+                speed = g.speed,
+                purchasemultiplier = g.purchasemultiplier,
+                description = g.description
+            };
+        }
+        string json = JsonUtility.ToJson(saveData);
+        print(json);
+        return json;
+    }
+    public void LoadGUPGmanager()
+    {
+        if (!PlayerPrefs.HasKey("upgrades")) return;
+        string json = PlayerPrefs.GetString("upgrades");
+        SaveDataArray saveData = JsonUtility.FromJson<SaveDataArray>(json);
+        for (int i = 0; i < Upgrades.Length; i++)
+        {
+            if (Upgrades[i] == null)
+                continue;
+            GUmanager g = Upgrades[i].GetComponent<GUmanager>();
+            GUsavedata savedata = saveData.items[i];
+            g.cost = savedata.cost;
+            g.amountowned = savedata.amountowned;
+            g.change = savedata.change;
+            g.multiplier = savedata.multiplier;
+            g.speed = savedata.speed;
+            g.purchasemultiplier = savedata.purchasemultiplier;
+            g.description = savedata.description;
+            print("loaded upgrade data for item " + i + ": " + json);
+        }
+    }
+
 }
 
