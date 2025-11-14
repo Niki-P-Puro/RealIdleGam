@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;  
 using UnityEngine.UI;
 
@@ -17,9 +16,29 @@ public class Gamemanager : MonoBehaviour
     private bool isGenerating = false; // Track if generation is active
     public float growthrate = 1.15f;
     public float totalGeneration = 0;
+    public float calulatedgen;
     // Use this for initialization
     void Start()
     {
+        for (int i = 0; i < Generators.Length; i++)
+        {
+            Generators[i].GetComponent<GUmanager>().cost = Mathf.Pow(8, (i * ((i != 0 && i != 1) ? 1.3f : 1f)) + 1); // Cost increases exponentially
+            Generators[i].GetComponent<GUmanager>().purchasemultiplier = 1.6f + ((i+1) * (growthrate)); // Incremental multiplier
+            Generators[i].GetComponent<GUmanager>().change = 0.02f * Mathf.Pow(6, (i * 1.3f) + 1);//this is kinda messed up   // Change increases with index
+            Generators[i].GetComponent<GUmanager>().multiplier = 1f;
+            Generators[i].GetComponent<GUmanager>().speed = 1f;
+            Generators[i].GetComponent<GUmanager>().amountowned = 0;
+        }
+        for (int i = 0; i < Upgrades.Length; i++)
+        {
+            Upgrades[i].GetComponent<GUmanager>().cost = Mathf.Pow(12, (i * 1.1f) + 1); // Cost increases exponentially
+            Upgrades[i].GetComponent<GUmanager>().purchasemultiplier = 6f + ((i+1) * (growthrate)); // Incremental multiplier
+            Upgrades[i].GetComponent<GUmanager>().change = 0;
+            Upgrades[i].GetComponent<GUmanager>().multiplier = 1.4f;
+            Upgrades[i].GetComponent<GUmanager>().speed = 1f;
+            Upgrades[i].GetComponent<GUmanager>().amountowned = 0;
+            Upgrades[i].GetComponent<GUmanager>().description = "2x production";
+        }
         if (PlayerPrefs.HasKey("offlineProgress"))
         {
             float storedValue = PlayerPrefs.GetFloat("offlineProgress");
@@ -27,25 +46,7 @@ public class Gamemanager : MonoBehaviour
             Debug.Log("Restored offline progress: " + storedValue);
         }
        
-            for (int i = 0; i < Generators.Length; i++)
-            {
-                Generators[i].GetComponent<GUmanager>().cost = Mathf.Pow(8, (i * ((i != 0 && i != 1) ? 1.3f : 1f)) + 1); // Cost increases exponentially
-                Generators[i].GetComponent<GUmanager>().purchasemultiplier = 1.6f + ((i+1) * (growthrate)); // Incremental multiplier
-                Generators[i].GetComponent<GUmanager>().change = 0.02f * Mathf.Pow(6, (i * 1.3f) + 1);//this is kinda messed up   // Change increases with index
-                Generators[i].GetComponent<GUmanager>().multiplier = 1f;
-                Generators[i].GetComponent<GUmanager>().speed = 1f;
-                Generators[i].GetComponent<GUmanager>().amountowned = 0;
-            }
-            for (int i = 0; i < Upgrades.Length; i++)
-            {
-                Upgrades[i].GetComponent<GUmanager>().cost = Mathf.Pow(12, (i * 1.1f) + 1); // Cost increases exponentially
-                Upgrades[i].GetComponent<GUmanager>().purchasemultiplier = 6f + ((i+1) * (growthrate)); // Incremental multiplier
-                Upgrades[i].GetComponent<GUmanager>().change = 0;
-                Upgrades[i].GetComponent<GUmanager>().multiplier = 1.4f;
-                Upgrades[i].GetComponent<GUmanager>().speed = 1f;
-                Upgrades[i].GetComponent<GUmanager>().amountowned = 0;
-                Upgrades[i].GetComponent<GUmanager>().description = "2x production";
-            }
+            
         
         //for (int i = 0; i < Achievements.Length; i++)
         //    {
@@ -61,18 +62,25 @@ public class Gamemanager : MonoBehaviour
         {
             PlayerPrefs.DeleteAll();
         }
+        if (Input.GetKeyDown(KeyCode.Quote))
+        {
+            for (int i = 0; i < Generators.Length; i++)
+            {
+              print(Generators[i].GetComponent<GUmanager>().amountowned);
+            }
+        }
         if (Number < Mathf.Pow(10,4))
         NumberText.text = Number.ToString("F1");
         else
         NumberText.text = Number.ToString("E1");
-        
+        totalGeneration= 0; 
         for (int i = 0; i < Generators.Length; i++)
         {
             totalGeneration += (Generators[i].GetComponent<GUmanager>().change * Generators[i].GetComponent<GUmanager>().amountowned);
             Generators[i].GetComponent<GUmanager>().description = Generators[i].GetComponent<GUmanager>().change.ToString("F1") + "/s";
         }
         generation = totalGeneration;
-        
+        calulatedgen = (Generators[0].GetComponent<GUmanager>().change * Generators[0].GetComponent<GUmanager>().amountowned) + (Generators[1].GetComponent<GUmanager>().change * Generators[1].GetComponent<GUmanager>().amountowned) + (Generators[2].GetComponent<GUmanager>().change * Generators[2].GetComponent<GUmanager>().amountowned) + (Generators[3].GetComponent<GUmanager>().change * Generators[3].GetComponent<GUmanager>().amountowned) + (Generators[4].GetComponent<GUmanager>().change * Generators[4].GetComponent<GUmanager>().amountowned) + (Generators[5].GetComponent<GUmanager>().change * Generators[5].GetComponent<GUmanager>().amountowned) + (Generators[6].GetComponent<GUmanager>().change * Generators[6].GetComponent<GUmanager>().amountowned) + (Generators[7].GetComponent<GUmanager>().change * Generators[7].GetComponent<GUmanager>().amountowned);
         NumberAs.text = (totalGeneration*10).ToString("F1") + "/s";
     }
 
@@ -91,7 +99,7 @@ public class Gamemanager : MonoBehaviour
                 Number -= Generators[index].GetComponent<GUmanager>().cost;
                 Generators[index].GetComponent<GUmanager>().cost *= Generators[index].GetComponent<GUmanager>().purchasemultiplier;
                 Generators[index].GetComponent<GUmanager>().amountowned++;
-                StartGenerating(); // Start generating when upgrade is bought
+                print("bought generator");
             }
         }
     }
@@ -105,6 +113,7 @@ public class Gamemanager : MonoBehaviour
                 Upgrades[index].GetComponent<GUmanager>().cost *= Upgrades[index].GetComponent<GUmanager>().purchasemultiplier;
                 Upgrades[index].GetComponent<GUmanager>().amountowned++;
                 Generators[index].GetComponent<GUmanager>().change *= Upgrades[index].GetComponent<GUmanager>().multiplier;
+                print("bought upgrade");
             }
         }
     }
@@ -112,6 +121,7 @@ public class Gamemanager : MonoBehaviour
     {
         isGenerating = true; // Set generating to true
         StartCoroutine(ConstantTime());
+        print("generating");
     }
 
     IEnumerator ConstantTime()
@@ -120,6 +130,7 @@ public class Gamemanager : MonoBehaviour
         {
             Number += generation; // Add generation to Number
             yield return new WaitForSeconds(0.1f);
+            
         }
     }
 
@@ -190,24 +201,27 @@ public class Gamemanager : MonoBehaviour
     }
     public void LoadGenUmanager()
     {
-        if (!PlayerPrefs.HasKey("upgrade")) return;
-        string json = PlayerPrefs.GetString("upgrades");
+        if (!PlayerPrefs.HasKey("generators")) return;
+        string json = PlayerPrefs.GetString("generators");
         SaveDataArray saveData = JsonUtility.FromJson<SaveDataArray>(json);
         for (int i = 0; i < Generators.Length; i++)
         {
-            if (Generators[i] == null)
-                continue;
-            GUmanager g = Generators[i].GetComponent<GUmanager>();
-            GUsavedata savedata = saveData.items[i];
-            g.cost = savedata.cost;
-            g.amountowned = savedata.amountowned;
-            g.change = savedata.change;
-            g.multiplier = savedata.multiplier;
-            g.speed = savedata.speed;
-            g.purchasemultiplier = savedata.purchasemultiplier;
-            g.description = savedata.description;
-            print("loaded generator data for generator " + i + ": " + json);
-           
+            if (Generators[i] != null)
+            {
+                GUmanager g = Generators[i].GetComponent<GUmanager>();
+                GUsavedata savedata = saveData.items[i];
+                g.cost = savedata.cost;
+                g.amountowned = savedata.amountowned;
+                g.change = savedata.change;
+                g.multiplier = savedata.multiplier;
+                g.speed = savedata.speed;
+                g.purchasemultiplier = savedata.purchasemultiplier;
+                g.description = savedata.description;
+                print("loaded generator data for generator " + i + ": " + json);
+            }
+            else {
+                print("could not load generator data for generator " + i + ": null generator object");  
+            }
         }
        
             

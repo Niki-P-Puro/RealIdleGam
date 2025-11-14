@@ -2789,7 +2789,7 @@ MonoBehaviour:
   value: 
   NumberText: {fileID: 1830554673}
   NumberAs: {fileID: 593103623}
-  Number: 8
+  Number: 90
   Upgrades:
   - {fileID: 1017961196}
   - {fileID: 1803769634}
@@ -2832,6 +2832,8 @@ MonoBehaviour:
   - {fileID: 863435982}
   - {fileID: 1833513794}
   growthrate: 1.6
+  totalGeneration: 0
+  calulatedgen: 0
 --- !u!4 &1168486482
 Transform:
   m_ObjectHideFlags: 0

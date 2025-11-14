@@ -31,7 +31,7 @@ public class GUmanager : MonoBehaviour
         
         Transform child1 = transform.Find("Cost");
         if (cost < Mathf.Pow(10, 6))
-            child1.GetComponent<Text>().text = "Cost: " + cost.ToString("F1");
+            child1.GetComponent<Text>().text = "Cost: " + cost.ToString("F2");
         else
             child1.GetComponent<Text>().text = "Cost: " + cost.ToString("E1");
                                                                                 
@@ -44,7 +44,7 @@ public class GUmanager : MonoBehaviour
         else
         {
             if (change < Mathf.Pow(10, 6))
-                child2.GetComponent<Text>().text = (10 * change).ToString("F1") + "/s";
+                child2.GetComponent<Text>().text = (10 * change).ToString("F2") + "/s";
             else
                 child2.GetComponent<Text>().text = (10 * change).ToString("E1") + "/s";
 

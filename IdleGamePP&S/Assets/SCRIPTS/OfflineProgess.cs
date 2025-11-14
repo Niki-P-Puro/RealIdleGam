@@ -6,6 +6,7 @@ using UnityEngine;
 public class OfflineProgess : MonoBehaviour {
 	PlayerPrefs playerPrefs;
 	private const string offlineProgressKey = "offlineProgress";
+    float offlineEarnings;
     // Use this for initialization
     public void Start()
     {
@@ -23,9 +24,8 @@ public class OfflineProgess : MonoBehaviour {
 			Debug.Log("Offline duration: " + offlineDuration.TotalSeconds + " seconds");
 			if (offlineDuration.TotalSeconds > 0)
             {
-                float offlineEarnings = GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().generation * (float)offlineDuration.TotalSeconds;
-                GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().Number += offlineEarnings;
-                Debug.Log("Added offline earnings: " + offlineEarnings);
+                 offlineEarnings = PlayerPrefs.GetFloat("generation") * (float)offlineDuration.TotalSeconds;
+                
             }
 		}
 		if (PlayerPrefs.HasKey("value"))
@@ -42,13 +42,24 @@ public class OfflineProgess : MonoBehaviour {
             GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().LoadGenUmanager();
             Debug.Log("Restored generators: " + generators);
         }
+        else
+        {
+            Debug.Log("no generator key detected");
+        }
 		if (PlayerPrefs.HasKey("upgrades"))
         {
             string serializedUpgrades = PlayerPrefs.GetString("upgrades");
             GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().LoadGUPGmanager();
-            Debug.Log("Restored upgrades: " + serializedUpgrades);
+ 
+        }
+        else
+        {
+            Debug.Log("no upgrades key detected");
         }
         GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().StartGenerating();
+        GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().Number += offlineEarnings;
+        Debug.Log("Added offline earnings: " + offlineEarnings);
+        print("loading complete");
 	}
 	
 	void OnApplicationQuit()
@@ -58,7 +69,9 @@ public class OfflineProgess : MonoBehaviour {
 		PlayerPrefs.SetFloat("value", GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().Number);
 		PlayerPrefs.SetString("generators", GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().SaveGenUmanager());
         PlayerPrefs.SetString("upgrades", GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().SaveGUPGmanager());
-		PlayerPrefs.SetFloat("generation", GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().generation);
+		PlayerPrefs.SetFloat("generation", GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().calulatedgen *10);
+        print(GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().calulatedgen*10); 
         PlayerPrefs.Save();
+        print("saved");
     }
 }
