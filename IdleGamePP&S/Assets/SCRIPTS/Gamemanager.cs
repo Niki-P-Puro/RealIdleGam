@@ -20,6 +20,7 @@ public class Gamemanager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Application.runInBackground = true;
         for (int i = 0; i < Generators.Length; i++)
         {
             Generators[i].GetComponent<GUmanager>().cost = Mathf.Pow(8, (i * ((i != 0 && i != 1) ? 1.3f : 1f)) + 1); // Cost increases exponentially
@@ -69,7 +70,7 @@ public class Gamemanager : MonoBehaviour
               print(Generators[i].GetComponent<GUmanager>().amountowned);
             }
         }
-        if (Number < Mathf.Pow(10,4))
+        if (Number < Mathf.Pow(10,6))
         NumberText.text = Number.ToString("F1");
         else
         NumberText.text = Number.ToString("E1");
