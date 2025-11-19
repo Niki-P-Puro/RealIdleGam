@@ -140,6 +140,7 @@ public class Gamemanager : MonoBehaviour
         menus[0].SetActive(true);
         menus[1].SetActive(false);
         menus[2].SetActive(false);
+        menus[3].SetActive(false);
     }
 
     public void OpenUpg()
@@ -147,14 +148,22 @@ public class Gamemanager : MonoBehaviour
         menus[1].SetActive(true);
         menus[0].SetActive(false);
         menus[2].SetActive(false);
+        menus[3].SetActive(false);
     }
     public void OpenAch()
     {
         menus[2].SetActive(true);
         menus[0].SetActive(false);
         menus[1].SetActive(false);
+        menus[3].SetActive(false);
     }
-
+    public void OpenPres()
+    {
+        menus[3].SetActive(true);
+        menus[0].SetActive(false);
+        menus[1].SetActive(false);
+        menus[2].SetActive(false);
+    }
 
 
     [System.Serializable]
