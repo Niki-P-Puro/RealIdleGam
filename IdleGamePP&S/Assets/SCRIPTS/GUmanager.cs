@@ -5,7 +5,7 @@ public class GUmanager : MonoBehaviour
 {
 
 
-    
+    // getter setter + properties
     public new string name { get; set; }
     public string description { get; set; }
     public float change { get; set;}
@@ -26,7 +26,7 @@ public class GUmanager : MonoBehaviour
         this.amountowned = amountowned;
 
     }
-    public void Update()
+    public void Update() // updates the text fields of the GUI element
     {
         
         Transform child1 = transform.Find("Cost");
