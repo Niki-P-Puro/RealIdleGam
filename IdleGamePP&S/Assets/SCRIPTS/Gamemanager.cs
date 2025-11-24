@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;  
 using UnityEngine.UI;
@@ -22,6 +23,11 @@ public class Gamemanager : MonoBehaviour
     public float calulatedgen;
     public List<Text> texts = new List<Text>();
     public Font FontToUse;
+    public float prestigepoints;
+    public bool challenge = false;
+    public bool challengecomplete = false;
+    public Text challegestatus,prestigetext;
+
     // Use this for initialization
     void Start()
     {
@@ -91,6 +97,18 @@ public class Gamemanager : MonoBehaviour
         generation = totalGeneration;
         calulatedgen = (Generators[0].GetComponent<GUmanager>().change * Generators[0].GetComponent<GUmanager>().amountowned) + (Generators[1].GetComponent<GUmanager>().change * Generators[1].GetComponent<GUmanager>().amountowned) + (Generators[2].GetComponent<GUmanager>().change * Generators[2].GetComponent<GUmanager>().amountowned) + (Generators[3].GetComponent<GUmanager>().change * Generators[3].GetComponent<GUmanager>().amountowned) + (Generators[4].GetComponent<GUmanager>().change * Generators[4].GetComponent<GUmanager>().amountowned) + (Generators[5].GetComponent<GUmanager>().change * Generators[5].GetComponent<GUmanager>().amountowned) + (Generators[6].GetComponent<GUmanager>().change * Generators[6].GetComponent<GUmanager>().amountowned) + (Generators[7].GetComponent<GUmanager>().change * Generators[7].GetComponent<GUmanager>().amountowned);
         NumberAs.text = (totalGeneration*10).ToString("F1") + "/s"; // update CPS text  
+        if (challenge && Number >= 100000000)
+        {
+            print("challenge complete");
+            challengecomplete = true;
+            challenge = false;
+            StopChallenge();
+        }
+        if (challengecomplete)
+        {
+            challegestatus.text = "Challenge Complete!";
+        }
+        prestigetext.text = "Prestige Points: " + prestigepoints.ToString("F1");
     }
 
     public void SubNumber(float sub) // subtracts sub from Number if needed
@@ -126,7 +144,32 @@ public class Gamemanager : MonoBehaviour
             }
         }
     }
-    public void StartGenerating()
+    public void Prestige()
+    {
+       prestigepoints += Mathf.Max(0,(Number - 10000) / (Number / (2 * Number)) - Mathf.Log(Number));
+        Number = 10; // reset Number
+        for (int i = 0; i < Generators.Length; i++) // initialize generators
+        {
+            Generators[i].GetComponent<GUmanager>().cost = Mathf.Pow(8, (i * ((i != 0 && i != 1) ? 1.3f : 1f)) + 1); // Cost increases exponentially
+            Generators[i].GetComponent<GUmanager>().purchasemultiplier = 1.6f + ((i+1) * (growthrate)); // Incremental multiplier
+            Generators[i].GetComponent<GUmanager>().change = (0.02f * Mathf.Pow(6, (i * 1.3f) + 1)*(prestigepoints/10000)+1);//this is kinda messed up   // Change increases with index
+            Generators[i].GetComponent<GUmanager>().multiplier = 1f;
+            Generators[i].GetComponent<GUmanager>().speed = 1f;
+            Generators[i].GetComponent<GUmanager>().amountowned = 0;
+        }
+        for (int i = 0; i < Upgrades.Length; i++) // initialize upgrades
+        {
+            Upgrades[i].GetComponent<GUmanager>().cost = Mathf.Pow(12, (i * 1.1f) + 1); // Cost increases exponentially
+            Upgrades[i].GetComponent<GUmanager>().purchasemultiplier = 6f + ((i+1) * (growthrate)); // Incremental multiplier
+            Upgrades[i].GetComponent<GUmanager>().change = 0;
+            Upgrades[i].GetComponent<GUmanager>().multiplier = 1.4f;
+            Upgrades[i].GetComponent<GUmanager>().speed = 1f;
+            Upgrades[i].GetComponent<GUmanager>().amountowned = 0;
+            Upgrades[i].GetComponent<GUmanager>().description = "2x production";
+        }
+        print("prestiged");
+    }
+        public void StartGenerating()
     {
         isGenerating = true; // Set generating to true
         StartCoroutine(ConstantTime());
@@ -149,6 +192,8 @@ public class Gamemanager : MonoBehaviour
         menus[1].SetActive(false);
         menus[2].SetActive(false);
         menus[3].SetActive(false);
+        menus[4].SetActive(false);
+        menus[5].SetActive(false);
     }
 
     public void OpenUpg()
@@ -157,6 +202,8 @@ public class Gamemanager : MonoBehaviour
         menus[0].SetActive(false);
         menus[2].SetActive(false);
         menus[3].SetActive(false);
+        menus[4].SetActive(false);
+        menus[5].SetActive(false);
     }
     public void OpenAch()
     {
@@ -164,6 +211,8 @@ public class Gamemanager : MonoBehaviour
         menus[0].SetActive(false);
         menus[1].SetActive(false);
         menus[3].SetActive(false);
+        menus[4].SetActive(false);
+        menus[5].SetActive(false);
     }
     public void OpenPres()
     {
@@ -171,7 +220,90 @@ public class Gamemanager : MonoBehaviour
         menus[0].SetActive(false);
         menus[1].SetActive(false);
         menus[2].SetActive(false);
+        menus[4].SetActive(false);
+        menus[5].SetActive(false);
     }
+    public void OpenEne()
+    {
+        menus[4].SetActive(true);
+        menus[0].SetActive(false);
+        menus[1].SetActive(false);
+        menus[2].SetActive(false);
+        menus[3].SetActive(false);
+        menus[5].SetActive(false);
+    }
+    public void OpenStr()
+    {
+        menus[5].SetActive(true);
+        menus[0].SetActive(false);
+        menus[1].SetActive(false);
+        menus[2].SetActive(false);
+        menus[3].SetActive(false);
+        menus[4].SetActive(false);
+    }
+
+    public void StartChallenge()
+    {
+        for (int i = 0; i < Generators.Length; i++) // initialize generators
+        {
+            Generators[i].GetComponent<GUmanager>().cost = Mathf.Pow(8, (i * ((i != 0 && i != 1) ? 1.3f : 1f)) + 1); // Cost increases exponentially
+            Generators[i].GetComponent<GUmanager>().purchasemultiplier = 2.6f + ((i+1) * (growthrate)); // Incremental multiplier
+            Generators[i].GetComponent<GUmanager>().change = 0.02f * Mathf.Pow(6, (i * 1.3f) + 1);//this is kinda messed up   // Change increases with index
+            Generators[i].GetComponent<GUmanager>().multiplier = 1f;
+            Generators[i].GetComponent<GUmanager>().speed = 1f;
+            Generators[i].GetComponent<GUmanager>().amountowned = 0;
+        }
+        for (int i = 0; i < Upgrades.Length; i++) // initialize upgrades
+        {
+            Upgrades[i].GetComponent<GUmanager>().cost = Mathf.Pow(12, (i * 1.1f) + 1); // Cost increases exponentially
+            Upgrades[i].GetComponent<GUmanager>().purchasemultiplier = 6f + ((i+1) * (growthrate)); // Incremental multiplier
+            Upgrades[i].GetComponent<GUmanager>().change = 0;
+            Upgrades[i].GetComponent<GUmanager>().multiplier = 1.4f;
+            Upgrades[i].GetComponent<GUmanager>().speed = 1f;
+            Upgrades[i].GetComponent<GUmanager>().amountowned = 0;
+            Upgrades[i].GetComponent<GUmanager>().description = "2x production";
+        }
+        Number = 8;
+        challenge = true;
+        print("challenge started");
+    }
+    public void StopChallenge()
+    {
+        challenge = false;
+        print("challenge stopped");
+        for (int i = 0; i < Generators.Length; i++) // initialize generators
+        {
+            Generators[i].GetComponent<GUmanager>().cost = Mathf.Pow(8, (i * ((i != 0 && i != 1) ? 1.3f : 1f)) + 1); // Cost increases exponentially
+            Generators[i].GetComponent<GUmanager>().purchasemultiplier = 1.6f + ((i+1) * (growthrate)); // Incremental multiplier
+            Generators[i].GetComponent<GUmanager>().change = (0.02f * Mathf.Pow(6, (i * 1.3f) + 1)*(prestigepoints/10000)+1);//this is kinda messed up   // Change increases with index
+            Generators[i].GetComponent<GUmanager>().multiplier = 1f;
+            Generators[i].GetComponent<GUmanager>().speed = 1f;
+            Generators[i].GetComponent<GUmanager>().amountowned = 0;
+        }
+        for (int i = 0; i < Upgrades.Length; i++) // initialize upgrades
+        {
+            Upgrades[i].GetComponent<GUmanager>().cost = Mathf.Pow(12, (i * 1.1f) + 1); // Cost increases exponentially
+            Upgrades[i].GetComponent<GUmanager>().purchasemultiplier = 6f + ((i+1) * (growthrate)); // Incremental multiplier
+            Upgrades[i].GetComponent<GUmanager>().change = 0;
+            Upgrades[i].GetComponent<GUmanager>().multiplier = 1.4f;
+            Upgrades[i].GetComponent<GUmanager>().speed = 1f;
+            Upgrades[i].GetComponent<GUmanager>().amountowned = 0;
+            Upgrades[i].GetComponent<GUmanager>().description = "2x production";
+        }
+        Number = 8;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     [System.Serializable]
@@ -290,6 +422,10 @@ public class Gamemanager : MonoBehaviour
             g.description = savedata.description;
             print("loaded upgrade data for item " + i + ": " + json);
         }
+    }
+    public void OnApplicationQuit() 
+    {
+       //any
     }
 
 }

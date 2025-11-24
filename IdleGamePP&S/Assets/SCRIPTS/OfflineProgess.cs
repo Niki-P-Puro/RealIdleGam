@@ -28,6 +28,12 @@ public class OfflineProgess : MonoBehaviour {
                 
             }
 		}
+        if (PlayerPrefs.HasKey("prestige"))
+        {
+            float storedPrestige = PlayerPrefs.GetFloat("prestige");
+            GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().prestigepoints = storedPrestige;
+            Debug.Log("Restored prestige points: " + storedPrestige);
+        }
 		if (PlayerPrefs.HasKey("value")) // Restore stored value
         {
             float storedValue = PlayerPrefs.GetFloat("value");
@@ -48,13 +54,41 @@ public class OfflineProgess : MonoBehaviour {
         }
 		if (PlayerPrefs.HasKey("upgrades")) // Restore stored upgrades
         {
-            string serializedUpgrades = PlayerPrefs.GetString("upgrades");
+            //string serializedUpgrades = PlayerPrefs.GetString("upgrades");
             GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().LoadGUPGmanager();
  
         }
         else
         {
             Debug.Log("no upgrades key detected");
+        }
+        if (PlayerPrefs.HasKey("challenge")) // Restore stored challenge state
+        {
+            int challengeState = PlayerPrefs.GetInt("challenge");
+            if (challengeState == 1)
+            {
+                GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().challenge = true;
+                Debug.Log("Restored challenge state: Active");
+            }
+            else
+            {
+                GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().challenge = false;
+                Debug.Log("Restored challenge state: Inactive");
+            }
+        }
+        if (PlayerPrefs.HasKey("challengecomplete"))
+        {
+            int challengecomplete = PlayerPrefs.GetInt("challengecomplete");
+            if (challengecomplete == 1)
+            {
+                GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().challengecomplete = true;
+                Debug.Log("Restored challengecomplete state: Active");
+            }
+            else
+            {
+                GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().challengecomplete = false;
+                Debug.Log("Restored challengecomplete state: Inactive");
+            }
         }
         GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().StartGenerating(); // Restart generation after loading
         GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().Number += offlineEarnings; // Add offline earnings to current number
@@ -70,6 +104,15 @@ public class OfflineProgess : MonoBehaviour {
 		PlayerPrefs.SetString("generators", GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().SaveGenUmanager()); // to save the current generators
         PlayerPrefs.SetString("upgrades", GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().SaveGUPGmanager()); // to save the current upgrades
 		PlayerPrefs.SetFloat("generation", GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().calulatedgen *10); // to save the current generation rate
+        PlayerPrefs.SetFloat("prestige", GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().prestigepoints); // to save the current prestige points
+        if (GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().challenge)
+            PlayerPrefs.SetInt("challenge", 1); // to save the current challenge active state
+        else
+        PlayerPrefs.SetInt("challengecomplete", 0); // to save the current challenge active state
+        if (GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().challengecomplete)
+            PlayerPrefs.SetInt("challengecomplete", 1); // to save the current challengecomplete active state
+        else
+            PlayerPrefs.SetInt("autobuyersactive", 0); // to save the current challengecomplete active state
         print(GameObject.Find("_0Gamemanager").GetComponent<Gamemanager>().calulatedgen*10);  // Devlog generation rate
         PlayerPrefs.Save();
         print("saved");
