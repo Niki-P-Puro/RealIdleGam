@@ -27,10 +27,12 @@ public class Gamemanager : MonoBehaviour
     public bool challenge = false;
     public bool challengecomplete = false;
     public Text challegestatus,prestigetext;
-
+    AudioSource auds;
+    public AudioClip click;
     // Use this for initialization
     void Start()
     {
+        auds = GetComponent<AudioSource>();
         Application.runInBackground = true; // Allow the application to run in the background for idle play
         for (int i = 0; i < Generators.Length; i++) // initialize generators
         {
@@ -110,7 +112,10 @@ public class Gamemanager : MonoBehaviour
         }
         prestigetext.text = "Prestige Points: " + prestigepoints.ToString("F1");
     }
-
+    public void ClickButton()
+    {
+        auds.PlayOneShot(click);
+    }
     public void SubNumber(float sub) // subtracts sub from Number if needed
     {
         Number -= sub;
